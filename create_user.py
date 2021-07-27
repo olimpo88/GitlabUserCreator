@@ -3,17 +3,26 @@
 import requests
 import sys
 import csv
+from os import path
 
 if len(sys.argv)<2:
-	print("This script requires two parameters 'python create_user.py url token'")
+	print("This script requires at least two parameters 'python create_user.py url token path_csv_file(optional)'")
 	exit()
 else:
 	API_URL="%s/api/v4"%(sys.argv[1])
 	HEADERS={'PRIVATE-TOKEN': sys.argv[2]}
 
+PATH_FILE='users.csv'
+if len(sys.argv)==4:
+	PATH_FILE=sys.argv[3]
+	
 def get_users():
 	users=[]
-	with open('users.csv') as csv_file:
+	if not path.exists(PATH_FILE):
+		print("No such file or directory: %s"%PATH_FILE)
+		return users
+
+	with open(PATH_FILE) as csv_file:
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		for row in csv_reader:
 			admin="false"
